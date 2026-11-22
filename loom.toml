@@ -1,0 +1,29 @@
+# Facts for the Loom backend: model, pins, preset. Edit this file to swap the model
+# or the card; module.nix reads it.
+
+port = 8000
+model_id = "gpu"            # sent as the API `model` field; model.json sets model.id to this
+
+# The card the backend may use. Find yours with `lspci -D -nn | grep -i vga`;
+# hip_device is the card's index in amdf-info / rocminfo order.
+pci_slot = "0000:03:00.0"   # Radeon AI PRO R9700 (1002:7551, gfx1201) on the reference box
+hip_device = 0
+
+[backend]
+name = "Inkling 2 Mini UD-Q4_K_XL (AMD Loom RDNA4)"
+hrx_loom_version = "0.2.0"
+loom_repo = "loom-fun/unsloth-Inkling-2-Mini-loom"
+loom_rev = "9b1eedd839ec3d648031f81256fd5fcdd4cf6c10"
+hf_repo = "unsloth/Inkling-2-Mini-GGUF"
+hf_rev = "ea0c79b2ecd73669e774c8519b79bfabfddbc027"
+model = "Inkling-2-Mini-UD-Q4_K_XL.gguf"        # 26.4B MoE, 16.4 GiB
+dspark_hf_repo = "thinkingmachines/Inkling-2-Mini"
+dspark_hf_rev = "b85c3cfa615fc413cc9af3379f491b963f3b586a"
+dspark_model = "Inkling-2-Mini-DSpark-Q8_0.gguf" # DSpark speculative drafter (325 MiB Q8_0), built by convert-dspark-gguf.py
+draft_depth = 3                                 # speculative tokens per epoch
+vision_hf_rev = "ae9327c5fbc7333116ba32eee78bb5d2bbefae4f"
+vision_model = "mmproj-F16.gguf"                # 23-layer ViT vision projector (610 MiB F16)
+preset = "chat-r9700"
+context_per_slot = 81920                        # 80K per connection; pool = slots * context_per_slot
+slots = 4
+max_tokens = 16384                              # covers reasoning_content + final content without truncation
